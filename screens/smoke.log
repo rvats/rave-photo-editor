@@ -1,0 +1,69 @@
+Android 15
+Physical size: 1080x1920
+Physical density: 420
+    versionName=24.23.35 (190800-646585959)
+[15:18:23] installing app/build/outputs/apk/debug/app-debug.apk
+Performing Streamed Install
+Success
+Starting: Intent { cmp=com.ravemanagementllc.ravephotoeditor/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: com.ravemanagementllc.ravephotoeditor/.MainActivity
+TotalTime: 2410
+WaitTime: 2425
+Complete
+[15:18:40] screenshot 00-start
+Sample photo: File:Golden retriever alert (30190754125).jpg
+Source: https://commons.wikimedia.org/wiki/File:Golden_retriever_alert_(30190754125).jpg
+Author: David Whelan
+Licence: CC0
+Original size: 4153x2811; downloaded: https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Golden_retriever_alert_%2830190754125%29.jpg/1920px-Golden_retriever_alert_%2830190754125%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail
+Search: golden retriever dog grass
+
+Starting: Intent { act=android.intent.action.SEND typ=image/jpeg cmp=com.ravemanagementllc.ravephotoeditor/.MainActivity (has extras) }
+Warning: Activity not started, intent has been delivered to currently running top-most instance.
+Status: ok
+LaunchState: UNKNOWN (0)
+Activity: com.ravemanagementllc.ravephotoeditor/.MainActivity
+TotalTime: 0
+WaitTime: 99
+Complete
+[15:18:50] screenshot 01-photo
+[15:18:52] tapped 'Remove background' at 271 1689
+[15:18:55] cutout attempt 1: text="The AI model is still downloading through Google Play services. Please try again in a minute."
+[15:19:19] tapped 'Remove background' at 271 1689
+[15:19:23] cutout attempt 2: text="The AI model is still downloading through Google Play services. Please try again in a minute."
+[15:19:45] tapped 'Remove background' at 271 1689
+[15:21:20] cutout attempt 3: no result
+[15:21:42] could not find 'Remove background' on screen
+[15:21:42] AI cutout did not work on this emulator
+[15:21:44] could not find 'Enhance' on screen
+[15:21:46] could not find 'Filters' on screen
+[15:21:48] could not find 'Adjust' on screen
+[15:21:50] could not find 'Save' on screen
+[15:21:50] after save: 
+ls: /sdcard/Pictures/RAVE Photo Editor/: No such file or directory
+[15:21:50] APP NOT RUNNING at the end
+[15:21:50] release build test: /home/runner/work/_temp/app-release-test.apk
+Success
+Serving...
+All files should be loaded. Notifying the device.
+Performing Incremental Install
+Success
+Install command complete in 788 ms
+Starting: Intent { act=android.intent.action.SEND typ=image/jpeg flg=0x1 cmp=com.ravemanagementllc.ravephotoeditor/.MainActivity (has extras) }
+Status: ok
+LaunchState: COLD
+Activity: com.ravemanagementllc.ravephotoeditor/.MainActivity
+TotalTime: 1770
+WaitTime: 1771
+Complete
+[15:22:02] release: photo did NOT open
+[15:22:03] screenshot 10-release-photo
+[15:22:05] could not find 'Remove background' on screen
+[15:22:07] could not find 'Enhance' on screen
+[15:22:09] could not find 'Filters' on screen
+[15:22:11] could not find 'Save' on screen
+[15:22:11] release: after save: 
+[15:22:11] release: app still running
+[15:22:11] no crash in logcat

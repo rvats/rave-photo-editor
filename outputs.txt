@@ -1,0 +1,14 @@
+app/build/outputs/apk/debug:
+total 30492
+-rw-r--r-- 1 runner runner 31219471 Oct 18 15:15 app-debug.apk
+-rw-r--r-- 1 runner runner      421 Oct 18 15:15 output-metadata.json
+
+app/build/outputs/apk/release:
+total 2880
+-rw-r--r-- 1 runner runner 2937718 Oct 18 15:16 app-release-unsigned.apk
+drwxr-xr-x 4 runner runner    4096 Oct 18 15:16 baselineProfiles
+-rw-r--r-- 1 runner runner     754 Oct 18 15:16 output-metadata.json
+
+app/build/outputs/bundle/release:
+total 3552
+-rw-r--r-- 1 runner runner 3635193 Oct 18 15:16 app-release.aab
