@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -72,6 +73,10 @@ import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
@@ -405,7 +410,11 @@ private fun BackdropPanel(ui: UiState, vm: EditorViewModel) {
                             color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
                             shape = CircleShape
                         )
-                        .clickable(enabled = ui.busy == null, onClickLabel = name) {
+                        .semantics {
+                            contentDescription = "$name background"
+                            selected = isSelected
+                        }
+                        .clickable(enabled = ui.busy == null, role = Role.Button) {
                             vm.setBackdrop(Backdrop.Color(argb))
                         }
                 )
@@ -416,7 +425,16 @@ private fun BackdropPanel(ui: UiState, vm: EditorViewModel) {
 
 @Composable
 private fun EnhancePanel(ui: UiState, vm: EditorViewModel) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    // The whole row toggles, so the label is a tap target too.
+    Row(
+        Modifier.toggleable(
+            value = ui.edit.enhance,
+            enabled = ui.busy == null,
+            role = Role.Switch,
+            onValueChange = { vm.setEnhance(it) }
+        ),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Column(Modifier.weight(1f)) {
             Text("Auto enhance", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
             Spacer(Modifier.height(4.dp))
@@ -427,7 +445,7 @@ private fun EnhancePanel(ui: UiState, vm: EditorViewModel) {
             )
         }
         Spacer(Modifier.width(16.dp))
-        Switch(checked = ui.edit.enhance, onCheckedChange = { vm.setEnhance(it) })
+        Switch(checked = ui.edit.enhance, onCheckedChange = null, enabled = ui.busy == null)
     }
 }
 
