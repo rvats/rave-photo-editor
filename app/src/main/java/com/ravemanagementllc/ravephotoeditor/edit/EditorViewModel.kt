@@ -83,7 +83,12 @@ fun adjustMatrix(a: Adjust): ColorMatrix = ImageOps.chain(
 
 class EditorViewModel(app: Application) : AndroidViewModel(app) {
 
-    private val masker = SubjectMasker()
+    private val masker = SubjectMasker(app)
+
+    init {
+        // Start fetching the on-device AI model early, so it's ready by the time a photo is open.
+        masker.prefetch()
+    }
 
     private val _ui = MutableStateFlow(UiState())
     val ui: StateFlow<UiState> = _ui.asStateFlow()

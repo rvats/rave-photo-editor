@@ -89,19 +89,25 @@ wait_idle
 alive || log "APP NOT RUNNING after opening the photo"
 shot 01-photo
 
-# 3. AI Cutout. The first use downloads the ML Kit model through Play services, so retry.
+# 3. AI Cutout. The first use may wait for Play services to download the ML Kit model, so retry.
 cut_ok=0
-for attempt in 1 2 3 4 5 6 7 8; do
+for attempt in 1 2 3 4 5 6 7 8 9 10; do
   tap "Remove background" || break
-  sleep 2
-  wait_idle
-  msg="$(snack)"
-  if [ -z "$msg" ] && grep -qE 'text="Remove background"[^>]*enabled="false"' "$UI"; then
-    cut_ok=1
-    break
-  fi
-  log "cutout attempt $attempt: ${msg:-no result yet}"
-  sleep 25
+  msg=""
+  for j in $(seq 1 30); do
+    dump
+    if grep -qE 'text="Remove background"[^>]*enabled="false"' "$UI" \
+       && ! grep -q 'Finding the subject' "$UI"; then
+      cut_ok=1
+      break
+    fi
+    msg="$(snack)"
+    [ -n "$msg" ] && break
+    sleep 1
+  done
+  [ "$cut_ok" = 1 ] && break
+  log "cutout attempt $attempt: ${msg:-no result}"
+  sleep 20
 done
 if [ "$cut_ok" = 1 ]; then
   shot 02-cutout
@@ -115,7 +121,7 @@ fi
 
 # 6. Auto enhance, 7. a filter, 8. the adjust sliders.
 tap "Enhance" && tap "Auto enhance" && sleep 1 && wait_idle && shot 05-enhance
-tap "Filters" && sleep 1 && tap "Noir" && sleep 1 && wait_idle && shot 06-filters
+tap "Filters" && sleep 1 && tap "Vivid" && sleep 1 && wait_idle && shot 06-filters
 tap "Adjust" && sleep 1 && shot 07-adjust
 
 # 9. Save at full size to the gallery.

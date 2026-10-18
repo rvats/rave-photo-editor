@@ -85,6 +85,8 @@ dependencies {
 
     // On-device AI: subject segmentation runs on the phone through Google Play services.
     implementation("com.google.android.gms:play-services-mlkit-subject-segmentation:16.0.0-beta1")
+    // ModuleInstallClient, to fetch the model early (the newer version from ML Kit's own dependencies wins).
+    implementation("com.google.android.gms:play-services-base:18.1.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2")
 
     debugImplementation("androidx.compose.ui:ui-tooling")

@@ -40,7 +40,7 @@ Privacy policy: https://rvats.github.io/rave-photo-editor/privacy.html
 Privacy policy: https://rvats.github.io/rave-photo-editor/privacy.html
 Ads: No, the app does not contain ads
 App access: All functionality is available without special access
-Content rating: complete the questionnaire - category "Utility, productivity, communication or other"; answer No to violence, sexuality, language, controlled substances, gambling; no user-to-user interaction or sharing of user content inside the app (sharing goes through Android's share sheet); no location sharing; no purchases. Expected rating: Everyone / PEGI 3.
+Content rating: complete the questionnaire - category "All Other App Types"; answer No to violence, sexuality, language, controlled substances, gambling; no user-to-user interaction or sharing of user content inside the app (sharing goes through Android's share sheet); no location sharing; no purchases. Expected rating: Everyone / PEGI 3.
 Target audience: 13 and over (choose 13-15, 16-17 and 18+). Do not include under-13 age groups, so the Families policy does not apply.
 News app: No. Government app: No. Financial features: None. Health: None. Data deletion request: not applicable (no accounts).
 
