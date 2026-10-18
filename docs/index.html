@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAVE Photo Editor</title>
+<style>
+  :root { --bg:#ffffff; --fg:#1d2430; --muted:#5b6576; --accent:#7c3aed; --rule:#e5e7eb; --card:#f6f5fb; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0e0f14; --fg:#ecedf2; --muted:#a9adbd; --accent:#c4b5fd; --rule:#2a2d36; --card:#171922; } }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:40px 16px 64px; }
+  header { display:flex; gap:16px; align-items:center; margin-bottom:24px; }
+  header img { width:72px; height:72px; border-radius:18px; }
+  h1 { font-size:2rem; line-height:1.2; margin:0; }
+  h2 { font-size:1.2rem; margin:32px 0 8px; }
+  .muted { color:var(--muted); }
+  a { color:var(--accent); }
+  .card { background:var(--card); border-radius:12px; padding:16px 20px; }
+  ul { padding-left:1.2em; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="icon.png" alt="RAVE Photo Editor icon">
+    <div><h1>RAVE Photo Editor</h1><div class="muted">by RAVE Management LLC</div></div>
+  </header>
+
+  <p>Edit photos with on-device AI. Remove or blur backgrounds, swap in a clean colour, enhance in one tap and add filters.
+  Your photos are processed on your phone and never uploaded.</p>
+
+  <h2>Features</h2>
+  <ul>
+    <li><strong>AI Cutout</strong> &ndash; remove the background and save a transparent PNG.</li>
+    <li><strong>Portrait</strong> &ndash; blur the background behind your subject.</li>
+    <li><strong>Backdrop</strong> &ndash; replace the background with a solid colour.</li>
+    <li><strong>Enhance</strong> &ndash; balance exposure, contrast and colour in one tap.</li>
+    <li><strong>Filters and Adjust</strong> &ndash; eight looks plus brightness, contrast, saturation and warmth.</li>
+  </ul>
+
+  <h2>Help</h2>
+  <div class="card">
+    <p><strong>"The AI model is still downloading"</strong> &ndash; the first time you use an AI tool, Google Play services downloads
+    the on-device model. Stay connected to the internet for a minute and try again.</p>
+    <p><strong>Where are my saved photos?</strong> &ndash; in your gallery, in the <em>Pictures/RAVE Photo Editor</em> folder.</p>
+    <p><strong>Compare with the original</strong> &ndash; press and hold the photo.</p>
+  </div>
+
+  <h2>Contact</h2>
+  <p><a href="mailto:info@ravemanagementllc.com">info@ravemanagementllc.com</a></p>
+  <p><a href="privacy.html">Privacy Policy</a></p>
+</main>
+</body>
+</html>
