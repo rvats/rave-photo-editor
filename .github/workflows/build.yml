@@ -6,12 +6,16 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write   # the last step publishes the build outputs to the ci-builds branch
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
 
@@ -39,7 +43,20 @@ jobs:
           UPLOAD_STORE_PASSWORD: ${{ secrets.UPLOAD_STORE_PASSWORD }}
           UPLOAD_KEY_ALIAS: ${{ secrets.UPLOAD_KEY_ALIAS }}
           UPLOAD_KEY_PASSWORD: ${{ secrets.UPLOAD_KEY_PASSWORD }}
-        run: ./gradlew --no-daemon --stacktrace bundleRelease assembleRelease assembleDebug
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon --stacktrace bundleRelease assembleRelease assembleDebug 2>&1 | tee "$RUNNER_TEMP/build.log"
+
+      - name: Describe the build
+        run: |
+          BT="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)"
+          APK="$(ls app/build/outputs/apk/release/*.apk | head -1)"
+          "$BT/aapt2" dump badging "$APK" > "$RUNNER_TEMP/badging.txt"
+          head -5 "$RUNNER_TEMP/badging.txt"
+          grep -E "uses-permission" "$RUNNER_TEMP/badging.txt" || echo "no permissions"
+          MANIFEST="$(find app/build/intermediates -name AndroidManifest.xml -path '*merged_manifest*' -path '*elease*' | head -1)"
+          [ -n "$MANIFEST" ] && cp "$MANIFEST" "$RUNNER_TEMP/merged-release-manifest.xml"
+          ls -l app/build/outputs/bundle/release app/build/outputs/apk/release app/build/outputs/apk/debug | tee "$RUNNER_TEMP/outputs.txt"
 
       - name: Upload the build outputs
         uses: actions/upload-artifact@v7
@@ -51,3 +68,27 @@ jobs:
             app/build/outputs/apk/debug/*.apk
             app/build/outputs/mapping/release/mapping.txt
           if-no-files-found: error
+
+      - name: Publish the outputs to the ci-builds branch
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          OUT="$RUNNER_TEMP/ci-out"
+          mkdir -p "$OUT"
+          for f in build.log badging.txt merged-release-manifest.xml outputs.txt; do
+            [ -f "$RUNNER_TEMP/$f" ] && cp "$RUNNER_TEMP/$f" "$OUT/"
+          done
+          cp app/build/outputs/bundle/release/*.aab "$OUT/" 2>/dev/null || true
+          cp app/build/outputs/apk/debug/*.apk "$OUT/" 2>/dev/null || true
+          cp app/build/outputs/mapping/release/mapping.txt "$OUT/" 2>/dev/null || true
+          [ -d "$RUNNER_TEMP/screens" ] && cp -r "$RUNNER_TEMP/screens" "$OUT/"
+          printf 'Build %s of %s\nStatus: %s\n' "$GITHUB_RUN_NUMBER" "$GITHUB_SHA" "$JOB_STATUS" > "$OUT/README.md"
+          cd "$OUT"
+          git init -q -b ci-builds
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -qm "CI build $GITHUB_RUN_NUMBER for $GITHUB_SHA ($JOB_STATUS)"
+          git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:ci-builds
