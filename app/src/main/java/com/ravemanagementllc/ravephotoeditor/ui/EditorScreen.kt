@@ -412,7 +412,7 @@ private fun BackdropPanel(ui: UiState, vm: EditorViewModel) {
                         )
                         .semantics {
                             contentDescription = "$name background"
-                            selected = isSelected
+                            this.selected = isSelected
                         }
                         .clickable(enabled = ui.busy == null, role = Role.Button) {
                             vm.setBackdrop(Backdrop.Color(argb))
