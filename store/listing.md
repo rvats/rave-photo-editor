@@ -27,7 +27,7 @@ Questions or feedback: info@ravemanagementllc.com
 ## Graphics
 App icon: store/play-icon-512.png (512 x 512, 24-bit PNG)
 Feature graphic: store/feature-graphic-1024x500.png (1024 x 500)
-Phone screenshots: at least 2 (take them on your phone after installing the internal-testing build)
+Phone screenshots: store/screenshots/*.png (1080 x 1920, 24-bit PNG, taken by the CI emulator run); Play needs 2 to 8
 
 ## Categorisation and contact
 App category: Photography

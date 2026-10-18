@@ -13,14 +13,20 @@ Package: `com.ravemanagementllc.ravephotoeditor` · minSdk 29 · targetSdk 36 ·
 
 ## Build
 
-GitHub Actions (`.github/workflows/build.yml`) builds on every push to `main`:
+GitHub Actions (`.github/workflows/build.yml`) builds on every push to `main` (changes to `docs/`, `store/` and
+Markdown files don't trigger a build):
 
-- `app-release.aab` – signed Android App Bundle for Google Play (when the signing secrets are set)
+- `app-release.aab` – Android App Bundle for Google Play (signed when the signing secrets are set)
 - `app-release.apk` and `app-debug.apk` – for installing directly on a phone
+- a smoke test on an Android emulator: it opens a sample photo, runs each tool, takes screenshots, saves a photo and
+  checks logcat for crashes (`.github/scripts/screenshots.sh`)
 
-Download them from the run's **Artifacts** section. The version code is the workflow run number, so every build can be uploaded.
+Download the outputs from the run's **Artifacts** section; the latest build is also on the `ci-builds` branch.
+The version code is the workflow run number, so every build can be uploaded.
 
-Signing secrets (Settings → Secrets and variables → Actions): `UPLOAD_KEYSTORE_BASE64`, `UPLOAD_STORE_PASSWORD`,
+Signing: without secrets the bundle is unsigned and can be signed afterwards with
+`jarsigner -keystore rave-upload-key.jks app-release.aab rave-upload`. To have CI sign it, add these secrets
+(Settings → Secrets and variables → Actions): `UPLOAD_KEYSTORE_BASE64`, `UPLOAD_STORE_PASSWORD`,
 `UPLOAD_KEY_ALIAS`, `UPLOAD_KEY_PASSWORD`. The upload key is used with Play App Signing; keep a backup of it.
 
 Local build: Android Studio, or `./gradlew bundleRelease` with JDK 17 and the Android SDK (API 36).

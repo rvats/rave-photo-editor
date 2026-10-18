@@ -130,6 +130,51 @@ log "after save: $(grep -oE 'text="Saved[^"]*"' "$UI" | head -1)"
 adb shell ls -l "/sdcard/Pictures/RAVE\ Photo\ Editor/" >> "$LOG" 2>&1
 
 alive && log "app still running" || log "APP NOT RUNNING at the end"
+
+# 10. The release build (shrunk by R8, signed with a throwaway test key): open the photo through
+#     MediaStore like a gallery app would, then run the AI cutout, enhance, a filter and save.
+REL="${RELEASE_TEST_APK:-}"
+if [ -n "$REL" ] && [ -f "$REL" ]; then
+  log "release build test: $REL"
+  adb uninstall "$PKG" >> "$LOG" 2>&1
+  adb install "$REL" >> "$LOG" 2>&1 || log "release install failed"
+  adb push "$OUT/sample.jpg" /sdcard/Pictures/rave-sample.jpg >/dev/null
+  adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///sdcard/Pictures/rave-sample.jpg >/dev/null 2>&1
+  adb shell content call --uri content://media --method scan_volume --arg external_primary >/dev/null 2>&1
+  id=""
+  for i in $(seq 1 15); do
+    id="$(adb shell content query --uri content://media/external/images/media --projection _id:_display_name \
+      | grep 'rave-sample.jpg' | sed -n 's/.*_id=\([0-9]*\).*/\1/p' | head -1)"
+    [ -n "$id" ] && break
+    sleep 2
+  done
+  if [ -n "$id" ]; then
+    adb shell am start -W -n "$PKG/.MainActivity" -a android.intent.action.SEND -t image/jpeg \
+      --eu android.intent.extra.STREAM "content://media/external/images/media/$id" --grant-read-uri-permission >> "$LOG" 2>&1
+    sleep 4
+    wait_idle
+    if grep -q 'text="Remove background"' "$UI"; then log "release: photo opened"; else log "release: photo did NOT open"; fi
+    shot 10-release-photo
+    if tap "Remove background"; then
+      for j in $(seq 1 40); do
+        dump
+        if grep -qE 'text="Remove background"[^>]*enabled="false"' "$UI" && ! grep -q 'Finding the subject' "$UI"; then
+          log "release: AI cutout worked"; shot 11-release-cutout; break
+        fi
+        m="$(snack)"; [ -n "$m" ] && { log "release: cutout message $m"; break; }
+        sleep 1
+      done
+    fi
+    tap "Enhance" && tap "Auto enhance" && sleep 1 && wait_idle
+    tap "Filters" && sleep 1 && tap "Vivid" && sleep 1 && wait_idle
+    tap "Save" && sleep 2 && wait_idle
+    log "release: after save: $(grep -oE 'text="Saved[^"]*"' "$UI" | head -1)"
+  else
+    log "release: the sample photo did not appear in MediaStore"
+  fi
+  alive && log "release: app still running" || log "release: APP NOT RUNNING"
+fi
+
 adb logcat -d -v time > "$OUT/logcat.txt" 2>&1
 if grep -q "FATAL EXCEPTION" "$OUT/logcat.txt"; then
   log "CRASH in logcat:"
