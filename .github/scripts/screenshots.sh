@@ -56,6 +56,10 @@ adb wait-for-device
   adb shell dumpsys package com.google.android.gms | grep -m1 versionName
 } >> "$LOG" 2>&1
 
+# Play Store images ask Play Protect to scan apps installed over adb; skip that for test installs.
+adb shell settings put global verifier_verify_adb_installs 0 >/dev/null 2>&1
+adb shell settings put global package_verifier_enable 0 >/dev/null 2>&1
+
 log "installing $APK"
 adb install -r "$APK" >> "$LOG" 2>&1 || { log "install failed"; exit 1; }
 
